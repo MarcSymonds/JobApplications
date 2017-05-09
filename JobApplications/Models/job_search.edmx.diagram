@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="15a6651a4ff44378a02b37b601b9b792" Name="Diagram1">
+        <EntityTypeShape EntityType="job_searchModel.employment_agency" Width="1.5" PointX="0.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="job_searchModel.employment_agency_contact" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="job_searchModel.job_application" Width="4.375" PointX="5.25" PointY="3.875" IsExpanded="true" FillColor="0, 192, 0" />
+        <EntityTypeShape EntityType="job_searchModel.job_site" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="job_searchModel.FK_app_emp_agency" ManuallyRouted="false" />
+        <AssociationConnector Association="job_searchModel.FK_emp_agency_contact" ManuallyRouted="false" />
+        <AssociationConnector Association="job_searchModel.FK_app_emp_agency_contact" ManuallyRouted="true" >
+          <ConnectorPoint PointX="4.5" PointY="5.7785953776041667" />
+          <ConnectorPoint PointX="4.7475" PointY="5.7785953776041667" />
+          <ConnectorPoint PointX="4.7475" PointY="5.6223453776041667" />
+          <ConnectorPoint PointX="5.0025" PointY="5.6223453776041667" />
+          <ConnectorPoint PointX="5.0025" PointY="5.7785953776041667" />
+          <ConnectorPoint PointX="5.25" PointY="5.7785953776041667" />
+        </AssociationConnector>
+        <AssociationConnector Association="job_searchModel.FK_app_job_site" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

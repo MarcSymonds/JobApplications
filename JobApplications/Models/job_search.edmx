@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="job_searchModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="employment_agencies">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="45" />
+          <Property Name="url" Type="varchar" MaxLength="255" />
+          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="employment_agency_contacts">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="employment_agency_id" Type="int" />
+          <Property Name="contact_name" Type="varchar" MaxLength="45" />
+          <Property Name="contact_email" Type="varchar" MaxLength="100" />
+          <Property Name="contact_telephone" Type="varchar" MaxLength="20" />
+          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="job_applications">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="job_site_id" Type="int" />
+          <Property Name="job_site_reference" Type="varchar" MaxLength="30" />
+          <Property Name="employment_agency_id" Type="int" />
+          <Property Name="employment_agency_contact_id" Type="int" />
+          <Property Name="employment_agency_reference" Type="varchar" MaxLength="30" />
+          <Property Name="company_name" Type="varchar" MaxLength="45" />
+          <Property Name="company_location" Type="varchar" MaxLength="200" />
+          <Property Name="job_title" Type="varchar" MaxLength="45" />
+          <Property Name="application_date" Type="datetime" Precision="0" />
+          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="job_sites">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="45" />
+          <Property Name="url" Type="varchar" MaxLength="255" />
+          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="FK_app_emp_agency">
+          <End Role="employment_agencies" Type="Self.employment_agencies" Multiplicity="0..1" />
+          <End Role="job_applications" Type="Self.job_applications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employment_agencies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_applications">
+              <PropertyRef Name="employment_agency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_app_emp_agency_contact">
+          <End Role="employment_agency_contacts" Type="Self.employment_agency_contacts" Multiplicity="0..1" />
+          <End Role="job_applications" Type="Self.job_applications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employment_agency_contacts">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_applications">
+              <PropertyRef Name="employment_agency_contact_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_app_job_site">
+          <End Role="job_sites" Type="Self.job_sites" Multiplicity="0..1" />
+          <End Role="job_applications" Type="Self.job_applications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="job_sites">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_applications">
+              <PropertyRef Name="job_site_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_emp_agency_contact">
+          <End Role="employment_agencies" Type="Self.employment_agencies" Multiplicity="0..1" />
+          <End Role="employment_agency_contacts" Type="Self.employment_agency_contacts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employment_agencies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="employment_agency_contacts">
+              <PropertyRef Name="employment_agency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="job_searchModelStoreContainer">
+          <EntitySet Name="employment_agencies" EntityType="Self.employment_agencies" Schema="job_search" store:Type="Tables" />
+          <EntitySet Name="employment_agency_contacts" EntityType="Self.employment_agency_contacts" Schema="job_search" store:Type="Tables" />
+          <EntitySet Name="job_applications" EntityType="Self.job_applications" Schema="job_search" store:Type="Tables" />
+          <EntitySet Name="job_sites" EntityType="Self.job_sites" Schema="job_search" store:Type="Tables" />
+          <AssociationSet Name="FK_app_emp_agency" Association="Self.FK_app_emp_agency">
+            <End Role="employment_agencies" EntitySet="employment_agencies" />
+            <End Role="job_applications" EntitySet="job_applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_app_emp_agency_contact" Association="Self.FK_app_emp_agency_contact">
+            <End Role="employment_agency_contacts" EntitySet="employment_agency_contacts" />
+            <End Role="job_applications" EntitySet="job_applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_app_job_site" Association="Self.FK_app_job_site">
+            <End Role="job_sites" EntitySet="job_sites" />
+            <End Role="job_applications" EntitySet="job_applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_emp_agency_contact" Association="Self.FK_emp_agency_contact">
+            <End Role="employment_agencies" EntitySet="employment_agencies" />
+            <End Role="employment_agency_contacts" EntitySet="employment_agency_contacts" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="job_searchModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="employment_agency">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" >
+            <Documentation>
+              <Summary>Agency Name</Summary>
+              <LongDescription>The name of the agency</LongDescription>
+            </Documentation>
+          </Property>
+          <Property Name="url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="last_updated" Type="DateTime" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="job_applications" Relationship="Self.FK_app_emp_agency" FromRole="employment_agencies" ToRole="job_applications" />
+          <NavigationProperty Name="employment_agency_contacts" Relationship="Self.FK_emp_agency_contact" FromRole="employment_agencies" ToRole="employment_agency_contacts" />
+        </EntityType>
+        <EntityType Name="employment_agency_contact">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="employment_agency_id" Type="Int32" />
+          <Property Name="contact_name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="contact_email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="contact_telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="last_updated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="employment_agency" Relationship="Self.FK_emp_agency_contact" FromRole="employment_agency_contacts" ToRole="employment_agencies" />
+          <NavigationProperty Name="job_applications" Relationship="Self.FK_app_emp_agency_contact" FromRole="employment_agency_contacts" ToRole="job_applications" />
+        </EntityType>
+        <EntityType Name="job_application">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="job_site_id" Type="Int32" />
+          <Property Name="job_site_reference" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="employment_agency_id" Type="Int32" />
+          <Property Name="employment_agency_contact_id" Type="Int32" />
+          <Property Name="employment_agency_reference" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="company_name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="company_location" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="job_title" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="application_date" Type="DateTime" />
+          <Property Name="last_updated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="employment_agency" Relationship="Self.FK_app_emp_agency" FromRole="job_applications" ToRole="employment_agencies" />
+          <NavigationProperty Name="employment_agency_contact" Relationship="Self.FK_app_emp_agency_contact" FromRole="job_applications" ToRole="employment_agency_contacts" />
+          <NavigationProperty Name="job_site" Relationship="Self.FK_app_job_site" FromRole="job_applications" ToRole="job_sites" />
+        </EntityType>
+        <EntityType Name="job_site">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="last_updated" Type="DateTime" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="job_applications" Relationship="Self.FK_app_job_site" FromRole="job_sites" ToRole="job_applications" />
+        </EntityType>
+        <Association Name="FK_app_emp_agency">
+          <End Role="employment_agencies" Type="job_searchModel.employment_agency" Multiplicity="0..1" />
+          <End Role="job_applications" Type="job_searchModel.job_application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employment_agencies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_applications">
+              <PropertyRef Name="employment_agency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_emp_agency_contact">
+          <End Role="employment_agencies" Type="job_searchModel.employment_agency" Multiplicity="0..1" />
+          <End Role="employment_agency_contacts" Type="job_searchModel.employment_agency_contact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employment_agencies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="employment_agency_contacts">
+              <PropertyRef Name="employment_agency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_app_emp_agency_contact">
+          <End Role="employment_agency_contacts" Type="job_searchModel.employment_agency_contact" Multiplicity="0..1" />
+          <End Role="job_applications" Type="job_searchModel.job_application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employment_agency_contacts">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_applications">
+              <PropertyRef Name="employment_agency_contact_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_app_job_site">
+          <End Role="job_sites" Type="job_searchModel.job_site" Multiplicity="0..1" />
+          <End Role="job_applications" Type="job_searchModel.job_application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="job_sites">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_applications">
+              <PropertyRef Name="job_site_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="job_searchEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="employment_agencies" EntityType="job_searchModel.employment_agency" />
+          <EntitySet Name="employment_agency_contacts" EntityType="job_searchModel.employment_agency_contact" />
+          <EntitySet Name="job_applications" EntityType="job_searchModel.job_application" />
+          <EntitySet Name="job_sites" EntityType="job_searchModel.job_site" />
+          <AssociationSet Name="FK_app_emp_agency" Association="Self.FK_app_emp_agency">
+            <End Role="employment_agencies" EntitySet="employment_agencies" />
+            <End Role="job_applications" EntitySet="job_applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_emp_agency_contact" Association="Self.FK_emp_agency_contact">
+            <End Role="employment_agencies" EntitySet="employment_agencies" />
+            <End Role="employment_agency_contacts" EntitySet="employment_agency_contacts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_app_emp_agency_contact" Association="Self.FK_app_emp_agency_contact">
+            <End Role="employment_agency_contacts" EntitySet="employment_agency_contacts" />
+            <End Role="job_applications" EntitySet="job_applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_app_job_site" Association="Self.FK_app_job_site">
+            <End Role="job_sites" EntitySet="job_sites" />
+            <End Role="job_applications" EntitySet="job_applications" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="job_searchModelStoreContainer" CdmEntityContainer="job_searchEntities">
+          <EntitySetMapping Name="employment_agencies">
+            <EntityTypeMapping TypeName="job_searchModel.employment_agency">
+              <MappingFragment StoreEntitySet="employment_agencies">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="url" ColumnName="url" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employment_agency_contacts">
+            <EntityTypeMapping TypeName="job_searchModel.employment_agency_contact">
+              <MappingFragment StoreEntitySet="employment_agency_contacts">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="employment_agency_id" ColumnName="employment_agency_id" />
+                <ScalarProperty Name="contact_name" ColumnName="contact_name" />
+                <ScalarProperty Name="contact_email" ColumnName="contact_email" />
+                <ScalarProperty Name="contact_telephone" ColumnName="contact_telephone" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="job_applications">
+            <EntityTypeMapping TypeName="job_searchModel.job_application">
+              <MappingFragment StoreEntitySet="job_applications">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="job_site_id" ColumnName="job_site_id" />
+                <ScalarProperty Name="job_site_reference" ColumnName="job_site_reference" />
+                <ScalarProperty Name="employment_agency_id" ColumnName="employment_agency_id" />
+                <ScalarProperty Name="employment_agency_contact_id" ColumnName="employment_agency_contact_id" />
+                <ScalarProperty Name="employment_agency_reference" ColumnName="employment_agency_reference" />
+                <ScalarProperty Name="company_name" ColumnName="company_name" />
+                <ScalarProperty Name="company_location" ColumnName="company_location" />
+                <ScalarProperty Name="job_title" ColumnName="job_title" />
+                <ScalarProperty Name="application_date" ColumnName="application_date" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="job_sites">
+            <EntityTypeMapping TypeName="job_searchModel.job_site">
+              <MappingFragment StoreEntitySet="job_sites">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="url" ColumnName="url" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

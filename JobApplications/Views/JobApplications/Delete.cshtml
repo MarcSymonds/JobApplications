@@ -1,0 +1,104 @@
+﻿@model JobApplications.Models.job_applications
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>job_applications</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.job_site_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.job_site_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.job_site_reference)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.job_site_reference)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employment_agency_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employment_agency_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employment_agency_contact_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employment_agency_contact_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employment_agency_reference)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employment_agency_reference)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.company_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.company_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.company_location)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.company_location)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.job_title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.job_title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.application_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.application_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.last_updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.last_updated)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,98 @@
+﻿@model JobApplications.Models.job_applications
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>job_applications</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.job_site_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.job_site_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.job_site_reference)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.job_site_reference)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employment_agency_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employment_agency_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employment_agency_contact_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employment_agency_contact_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employment_agency_reference)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employment_agency_reference)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.company_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.company_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.company_location)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.company_location)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.job_title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.job_title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.application_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.application_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.last_updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.last_updated)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
