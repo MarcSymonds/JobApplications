@@ -22,3 +22,15 @@ select,
 textarea {
     max-width: 280px;
 }
+
+tr.pointer td {
+    cursor: pointer;
+}
+
+tr.job-app-latest-activity > td {
+    border-top-color: #999 !important;
+    border-top-style: dashed !important;
+
+    font-size: 90%;
+    color: #666;
+}

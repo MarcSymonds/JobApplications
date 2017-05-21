@@ -21,8 +21,12 @@ namespace JobApplications {
                    "~/Scripts/respond.js"));
 
          bundles.Add(new StyleBundle("~/Content/css").Include(
-                   "~/Content/bootstrap.css",
+                   "~/Content/bootstrap-lumen.css",
                    "~/Content/site.css"));
+
+         bundles.Add(new StyleBundle("~/Content/datatables").Include(
+            "~/Content/DataTables/css/datatables.bootstrap.css",
+            "~/Content/DataTables/css/buttons.bootstrap.css"));
       }
    }
 }

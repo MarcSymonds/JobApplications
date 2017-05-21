@@ -12,30 +12,18 @@ namespace JobApplications.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class job_application
+    public partial class job_application_activity_type
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public job_application()
+        public job_application_activity_type()
         {
             this.job_application_activity = new HashSet<job_application_activity>();
             this.latest_job_activity = new HashSet<latest_job_activity>();
         }
     
         public int id { get; set; }
-        public Nullable<int> job_site_id { get; set; }
-        public string job_site_reference { get; set; }
-        public Nullable<int> employment_agency_id { get; set; }
-        public Nullable<int> employment_agency_contact_id { get; set; }
-        public string employment_agency_reference { get; set; }
-        public string company_name { get; set; }
-        public string company_location { get; set; }
-        public string job_title { get; set; }
-        public Nullable<System.DateTime> application_date { get; set; }
-        public System.DateTime last_updated { get; set; }
+        public string description { get; set; }
     
-        public virtual employment_agency employment_agency { get; set; }
-        public virtual employment_agency_contact employment_agency_contact { get; set; }
-        public virtual job_site job_site { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<job_application_activity> job_application_activity { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

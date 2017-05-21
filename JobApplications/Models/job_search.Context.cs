@@ -29,5 +29,8 @@ namespace JobApplications.Models
         public virtual DbSet<employment_agency_contact> employment_agency_contacts { get; set; }
         public virtual DbSet<job_application> job_applications { get; set; }
         public virtual DbSet<job_site> job_sites { get; set; }
+        public virtual DbSet<job_application_activity> job_application_activity { get; set; }
+        public virtual DbSet<job_application_activity_type> job_application_activity_type { get; set; }
+        public virtual DbSet<latest_job_activity> latest_job_activity { get; set; }
     }
 }

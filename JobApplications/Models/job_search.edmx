@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="job_searchModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="job_searchModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="employment_agencies">
           <Key>
             <PropertyRef Name="id" />
@@ -12,7 +12,7 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="45" />
           <Property Name="url" Type="varchar" MaxLength="255" />
-          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" />
+          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="None" />
         </EntityType>
         <EntityType Name="employment_agency_contacts">
           <Key>
@@ -23,7 +23,25 @@
           <Property Name="contact_name" Type="varchar" MaxLength="45" />
           <Property Name="contact_email" Type="varchar" MaxLength="100" />
           <Property Name="contact_telephone" Type="varchar" MaxLength="20" />
-          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="None" Nullable="false" />
+        </EntityType>
+        <EntityType Name="job_application_activity">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="job_application_id" Type="int" Nullable="false" />
+          <Property Name="activity_type_id" Type="int" />
+          <Property Name="description" Type="text" />
+          <Property Name="activity_date" Type="datetime" Precision="0" />
+          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="job_application_activity_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="job_applications">
           <Key>
@@ -39,7 +57,7 @@
           <Property Name="company_location" Type="varchar" MaxLength="200" />
           <Property Name="job_title" Type="varchar" MaxLength="45" />
           <Property Name="application_date" Type="datetime" Precision="0" />
-          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="None" Nullable="false" />
         </EntityType>
         <EntityType Name="job_sites">
           <Key>
@@ -48,8 +66,34 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="45" />
           <Property Name="url" Type="varchar" MaxLength="255" />
-          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" />
+          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="None" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.job_search.latest_job_activity' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="latest_job_activity">
+          <Key>
+            <PropertyRef Name="job_application_activity_id" />
+            <PropertyRef Name="job_application_id" />
+          </Key>
+          <Property Name="job_application_activity_id" Type="int" Nullable="false" />
+          <Property Name="job_application_id" Type="int" Nullable="false" />
+          <Property Name="activity_type_id" Type="int" />
+          <Property Name="description" Type="text" />
+          <Property Name="activity_date" Type="datetime" Precision="0" />
+          <Property Name="last_updated" Type="datetime" Precision="0" />
+        </EntityType>
+        <Association Name="FK_activity_type">
+          <End Role="job_application_activity_type" Type="Self.job_application_activity_type" Multiplicity="0..1" />
+          <End Role="job_application_activity" Type="Self.job_application_activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="job_application_activity_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_application_activity">
+              <PropertyRef Name="activity_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_app_emp_agency">
           <End Role="employment_agencies" Type="Self.employment_agencies" Multiplicity="0..1" />
           <End Role="job_applications" Type="Self.job_applications" Multiplicity="*" />
@@ -98,11 +142,41 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_job_application">
+          <End Role="job_applications" Type="Self.job_applications" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="job_application_activity" Type="Self.job_application_activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="job_applications">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_application_activity">
+              <PropertyRef Name="job_application_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="job_searchModelStoreContainer">
           <EntitySet Name="employment_agencies" EntityType="Self.employment_agencies" Schema="job_search" store:Type="Tables" />
           <EntitySet Name="employment_agency_contacts" EntityType="Self.employment_agency_contacts" Schema="job_search" store:Type="Tables" />
+          <EntitySet Name="job_application_activity" EntityType="Self.job_application_activity" Schema="job_search" store:Type="Tables" />
+          <EntitySet Name="job_application_activity_type" EntityType="Self.job_application_activity_type" Schema="job_search" store:Type="Tables" />
           <EntitySet Name="job_applications" EntityType="Self.job_applications" Schema="job_search" store:Type="Tables" />
           <EntitySet Name="job_sites" EntityType="Self.job_sites" Schema="job_search" store:Type="Tables" />
+          <EntitySet Name="latest_job_activity" EntityType="Self.latest_job_activity" store:Type="Views" store:Schema="job_search">
+            <DefiningQuery>SELECT
+`latest_job_activity`.`job_application_activity_id`, 
+`latest_job_activity`.`job_application_id`, 
+`latest_job_activity`.`activity_type_id`, 
+`latest_job_activity`.`description`, 
+`latest_job_activity`.`activity_date`, 
+`latest_job_activity`.`last_updated`
+FROM `latest_job_activity` AS `latest_job_activity`</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_activity_type" Association="Self.FK_activity_type">
+            <End Role="job_application_activity_type" EntitySet="job_application_activity_type" />
+            <End Role="job_application_activity" EntitySet="job_application_activity" />
+          </AssociationSet>
           <AssociationSet Name="FK_app_emp_agency" Association="Self.FK_app_emp_agency">
             <End Role="employment_agencies" EntitySet="employment_agencies" />
             <End Role="job_applications" EntitySet="job_applications" />
@@ -119,9 +193,12 @@
             <End Role="employment_agencies" EntitySet="employment_agencies" />
             <End Role="employment_agency_contacts" EntitySet="employment_agency_contacts" />
           </AssociationSet>
+          <AssociationSet Name="FK_job_application" Association="Self.FK_job_application">
+            <End Role="job_applications" EntitySet="job_applications" />
+            <End Role="job_application_activity" EntitySet="job_application_activity" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="job_searchModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -137,7 +214,7 @@
             </Documentation>
           </Property>
           <Property Name="url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="last_updated" Type="DateTime" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="last_updated" Type="DateTime" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="job_applications" Relationship="Self.FK_app_emp_agency" FromRole="employment_agencies" ToRole="job_applications" />
           <NavigationProperty Name="employment_agency_contacts" Relationship="Self.FK_emp_agency_contact" FromRole="employment_agencies" ToRole="employment_agency_contacts" />
         </EntityType>
@@ -150,7 +227,7 @@
           <Property Name="contact_name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="contact_email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="contact_telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="last_updated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="last_updated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="employment_agency" Relationship="Self.FK_emp_agency_contact" FromRole="employment_agency_contacts" ToRole="employment_agencies" />
           <NavigationProperty Name="job_applications" Relationship="Self.FK_app_emp_agency_contact" FromRole="employment_agency_contacts" ToRole="job_applications" />
         </EntityType>
@@ -168,10 +245,12 @@
           <Property Name="company_location" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="job_title" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="application_date" Type="DateTime" />
-          <Property Name="last_updated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="last_updated" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="employment_agency" Relationship="Self.FK_app_emp_agency" FromRole="job_applications" ToRole="employment_agencies" />
           <NavigationProperty Name="employment_agency_contact" Relationship="Self.FK_app_emp_agency_contact" FromRole="job_applications" ToRole="employment_agency_contacts" />
           <NavigationProperty Name="job_site" Relationship="Self.FK_app_job_site" FromRole="job_applications" ToRole="job_sites" />
+          <NavigationProperty Name="job_application_activity" Relationship="job_searchModel.FK_job_application" FromRole="job_application" ToRole="job_application_activity" />
+          <NavigationProperty Name="latest_job_activity" Relationship="job_searchModel.latest_job_activityjob_application" FromRole="job_application" ToRole="latest_job_activity" />
         </EntityType>
         <EntityType Name="job_site">
           <Key>
@@ -180,7 +259,7 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="last_updated" Type="DateTime" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="last_updated" Type="DateTime" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="job_applications" Relationship="Self.FK_app_job_site" FromRole="job_sites" ToRole="job_applications" />
         </EntityType>
         <Association Name="FK_app_emp_agency">
@@ -252,7 +331,130 @@
             <End Role="job_sites" EntitySet="job_sites" />
             <End Role="job_applications" EntitySet="job_applications" />
           </AssociationSet>
+          <EntitySet Name="job_application_activity" EntityType="job_searchModel.job_application_activity" />
+          <EntitySet Name="job_application_activity_type" EntityType="job_searchModel.job_application_activity_type" />
+          <AssociationSet Name="FK_activity_type" Association="job_searchModel.FK_activity_type">
+            <End Role="job_application_activity_type" EntitySet="job_application_activity_type" />
+            <End Role="job_application_activity" EntitySet="job_application_activity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_job_application" Association="job_searchModel.FK_job_application">
+            <End Role="job_application" EntitySet="job_applications" />
+            <End Role="job_application_activity" EntitySet="job_application_activity" />
+          </AssociationSet>
+          <EntitySet Name="latest_job_activity" EntityType="job_searchModel.latest_job_activity" />
+          <AssociationSet Name="latest_job_activityjob_application_activity" Association="job_searchModel.latest_job_activityjob_application_activity">
+            <End Role="latest_job_activity" EntitySet="latest_job_activity" />
+            <End Role="job_application_activity" EntitySet="job_application_activity" />
+          </AssociationSet>
+          <AssociationSet Name="latest_job_activityjob_application_activity_type" Association="job_searchModel.latest_job_activityjob_application_activity_type">
+            <End Role="latest_job_activity" EntitySet="latest_job_activity" />
+            <End Role="job_application_activity_type" EntitySet="job_application_activity_type" />
+          </AssociationSet>
+          <AssociationSet Name="latest_job_activityjob_application" Association="job_searchModel.latest_job_activityjob_application">
+            <End Role="latest_job_activity" EntitySet="latest_job_activity" />
+            <End Role="job_application" EntitySet="job_applications" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="job_application_activity">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="job_application_id" Type="Int32" Nullable="false" />
+          <Property Name="activity_type_id" Type="Int32" />
+          <Property Name="description" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="last_updated" Type="DateTime" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="job_application_activity_type" Relationship="job_searchModel.FK_activity_type" FromRole="job_application_activity" ToRole="job_application_activity_type" />
+          <NavigationProperty Name="job_applications" Relationship="job_searchModel.FK_job_application" FromRole="job_application_activity" ToRole="job_application" />
+          <NavigationProperty Name="latest_job_activity" Relationship="job_searchModel.latest_job_activityjob_application_activity" FromRole="job_application_activity" ToRole="latest_job_activity" />
+          <Property Name="activity_date" Type="DateTime" />
+        </EntityType>
+        <EntityType Name="job_application_activity_type">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="description" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="job_application_activity" Relationship="job_searchModel.FK_activity_type" FromRole="job_application_activity_type" ToRole="job_application_activity" />
+          <NavigationProperty Name="latest_job_activity" Relationship="job_searchModel.latest_job_activityjob_application_activity_type" FromRole="job_application_activity_type" ToRole="latest_job_activity" />
+        </EntityType>
+        <Association Name="FK_activity_type">
+          <End Type="job_searchModel.job_application_activity_type" Role="job_application_activity_type" Multiplicity="0..1" />
+          <End Type="job_searchModel.job_application_activity" Role="job_application_activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="job_application_activity_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_application_activity">
+              <PropertyRef Name="activity_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_job_application">
+          <End Type="job_searchModel.job_application" Role="job_application" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="job_searchModel.job_application_activity" Role="job_application_activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="job_application">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="job_application_activity">
+              <PropertyRef Name="job_application_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="latest_job_activity">
+          <Key>
+            <PropertyRef Name="job_application_id" />
+            <PropertyRef Name="job_application_activity_id" />
+          </Key>
+          <Property Name="job_application_id" Type="Int32" Nullable="false" />
+          <Property Name="activity_type_id" Type="Int32" />
+          <Property Name="description" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="last_updated" Type="DateTime" />
+          <Property Name="job_application_activity_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="job_application_activity" Relationship="job_searchModel.latest_job_activityjob_application_activity" FromRole="latest_job_activity" ToRole="job_application_activity" />
+          <NavigationProperty Name="job_application_activity_type" Relationship="job_searchModel.latest_job_activityjob_application_activity_type" FromRole="latest_job_activity" ToRole="job_application_activity_type" />
+          <NavigationProperty Name="job_application" Relationship="job_searchModel.latest_job_activityjob_application" FromRole="latest_job_activity" ToRole="job_application" />
+          <Property Name="activity_date" Type="DateTime" />
+        </EntityType>
+        <Association Name="latest_job_activityjob_application_activity">
+          <End Type="job_searchModel.latest_job_activity" Role="latest_job_activity" Multiplicity="*" />
+          <End Type="job_searchModel.job_application_activity" Role="job_application_activity" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="job_application_activity">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="latest_job_activity">
+              <PropertyRef Name="job_application_activity_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="latest_job_activityjob_application_activity_type">
+          <End Type="job_searchModel.latest_job_activity" Role="latest_job_activity" Multiplicity="*" />
+          <End Type="job_searchModel.job_application_activity_type" Role="job_application_activity_type" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="job_application_activity_type">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="latest_job_activity">
+              <PropertyRef Name="activity_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="latest_job_activityjob_application">
+          <End Type="job_searchModel.latest_job_activity" Role="latest_job_activity" Multiplicity="*" />
+          <End Type="job_searchModel.job_application" Role="job_application" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="job_application">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="latest_job_activity">
+              <PropertyRef Name="job_application_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -305,6 +507,38 @@
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="url" ColumnName="url" />
                 <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="job_application_activity">
+            <EntityTypeMapping TypeName="IsTypeOf(job_searchModel.job_application_activity)">
+              <MappingFragment StoreEntitySet="job_application_activity">
+                <ScalarProperty Name="activity_date" ColumnName="activity_date" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="job_application_id" ColumnName="job_application_id" />
+                <ScalarProperty Name="activity_type_id" ColumnName="activity_type_id" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="job_application_activity_type">
+            <EntityTypeMapping TypeName="job_searchModel.job_application_activity_type">
+              <MappingFragment StoreEntitySet="job_application_activity_type">
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="latest_job_activity">
+            <EntityTypeMapping TypeName="job_searchModel.latest_job_activity">
+              <MappingFragment StoreEntitySet="latest_job_activity">
+                <ScalarProperty Name="activity_date" ColumnName="activity_date" />
+                <ScalarProperty Name="job_application_activity_id" ColumnName="job_application_activity_id" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="activity_type_id" ColumnName="activity_type_id" />
+                <ScalarProperty Name="job_application_id" ColumnName="job_application_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

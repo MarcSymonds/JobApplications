@@ -208,14 +208,26 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\EmploymentAgencyContactsController.cs" />
+    <Compile Include="Controllers\Api\JobApplicationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JobSitesController.cs" />
     <Compile Include="Controllers\JobApplicationsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DTOs\employment_agencyDTO.cs" />
+    <Compile Include="DTOs\employment_agency_contactDTO.cs" />
+    <Compile Include="ViewModels\job_applicationVMList.cs" />
+    <Compile Include="DTOs\job_applicationDTOBase.cs" />
+    <Compile Include="DTOs\job_application_activityDTO.cs" />
+    <Compile Include="DTOs\job_application_activity_typeDTO.cs" />
+    <Compile Include="ViewModels\job_applicationVMEdit.cs" />
+    <Compile Include="DTOs\job_siteDTO.cs" />
+    <Compile Include="DTOs\latest_job_activityDTO.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -229,6 +241,12 @@
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\job_application.cs">
+      <DependentUpon>job_search.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\job_application_activity.cs">
+      <DependentUpon>job_search.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\job_application_activity_type.cs">
       <DependentUpon>job_search.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\job_search.Context.cs">
@@ -249,11 +267,15 @@
     <Compile Include="Models\job_site.cs">
       <DependentUpon>job_search.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\latest_job_activity.cs">
+      <DependentUpon>job_search.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-lumen.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\DataTables\css\autoFill.bootstrap.css" />
@@ -413,6 +435,7 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
+    <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -427,6 +450,7 @@
       <DependentUpon>job_search.edmx</DependentUpon>
       <LastGenOutput>job_search.cs</LastGenOutput>
     </Content>
+    <Content Include="ReadMe - Fix when initating DB first models from MySQL.txt" />
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -572,7 +596,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\Api\" />
     <Folder Include="Views\JobSites\" />
   </ItemGroup>
   <ItemGroup>

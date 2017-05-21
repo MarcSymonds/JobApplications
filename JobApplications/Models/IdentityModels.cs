@@ -20,6 +20,10 @@ namespace JobApplications.Models {
       public DbSet<job_site> job_sites { get; set; }
       public DbSet<employment_agency> emplyoment_agencies { get; set; }
       public DbSet<employment_agency_contact> employment_agency_contacts { get; set; }
+      public DbSet<job_application_activity> job_application_activity { get; set; }
+      public DbSet<job_application_activity_type> job_application_activity_type { get; set; }
+      public DbSet<latest_job_activity> latest_job_activity { get; set; }
+
       public ApplicationDbContext() : base("JobSearch", throwIfV1Schema: false) {
       }
 

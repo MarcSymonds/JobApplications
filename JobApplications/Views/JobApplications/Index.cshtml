@@ -1,87 +1,118 @@
-﻿@model IEnumerable<JobApplications.Models.job_application>
+﻿@using JobApplications.ViewModels
+@model IEnumerable<job_applicationVMList>
 
 @{
-    ViewBag.Title = "Index";
+   ViewBag.Title = "Job Applications";
 }
 
-<h2>Index</h2>
+@Styles.Render("~/Content/datatables")
+
+<h2>@ViewBag.Title</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.job_site.name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.job_site_reference)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.employment_agency.name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.employment_agency_contact.contact_name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.employment_agency_reference)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.company_name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.company_location)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.job_title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.application_date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.last_updated)
-        </th>
-        <th></th>
-    </tr>
+<table class="table dataTable table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="dt-head-nowrap">Job Site</th>
+            <th>Employment Agency</th>
+            <th>Employer</th>
+            <th>Employer Location</th>
+            <th>Role</th>
+            <th>Application Date</th>
+            <th>Last Updated</th>
+            <th> </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+           bool odd = false;
+           bool line;
+           bool hasLatest;
+           string rowClass;
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.job_site.name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.job_site_reference)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.employment_agency.name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.employment_agency_contact.contact_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.employment_agency_reference)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.company_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.company_location)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.job_title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.application_date)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.last_updated)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })
-        </td>
-    </tr>
-}
+           foreach (var item in Model) {
+               line = false;
+               odd = !odd;
+               hasLatest = item.latest_job_activity != null && item.latest_job_activity.Count > 0;
+
+               rowClass = odd ? "odd" : "";
+            <tr class="pointer @rowClass" onclick="editItem('@Url.Action("Edit", new { id = item.id })');">
+                <td class="dt-body-nowrap">
+                    @if (!String.IsNullOrWhiteSpace(item.job_site?.name)) {
+                    @Html.DisplayFor(modelItem => item.job_site.name)
+                        line = true;
+                    }
+                    @if (!String.IsNullOrEmpty(item.job_site_reference)) {
+                        if (line) {
+                        <br />
+                        }
+                    <strong>Ref: </strong>@Html.DisplayFor(modelItem => item.job_site_reference)
+                        line = true;
+                    }
+                </td>
+                <td>
+                    @if (item.employment_agency != null) {
+               if (!String.IsNullOrEmpty(item.employment_agency.url)) {
+                        <a href="@item.employment_agency.url" target="_blank">@Html.DisplayFor(i => item.employment_agency.name)</a>
+                        }
+                        else {
+                        @Html.DisplayFor(i => item.employment_agency.name)
+                        }
+
+                        if (!String.IsNullOrEmpty(item.employment_agency_reference)) {
+                        <br />
+                        <strong>Ref: </strong>@Html.DisplayFor(i => item.employment_agency_reference)
+                        }
+
+                        if (item.employment_agency_contact != null) {
+                        <br />
+                        <strong>Contact: </strong>@Html.DisplayFor(i => item.employment_agency_contact.contact_name)
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.company_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.company_location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.job_title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.application_date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.last_updated)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                </td>
+            </tr>
+            {
+               if (hasLatest) {
+                var lastAct = item.latest_job_activity.First();
+                <tr class="pointer job-app-latest-activity @rowClass">
+
+                        <td><strong>Last Action</strong></td>
+                        <td colspan="4">@Html.DisplayFor(m => lastAct.description)</td>
+                        <td>@Html.DisplayFor(m => lastAct.activity_date)</td>
+                        <td>@Html.DisplayFor(m => lastAct.last_updated)</td>
+                        <td> </td>
+                    </tr>
+                    }
+                }
+           }
+        }
+    </tbody>
 
 </table>
+
+<script>
+    function editItem(link) {
+        window.location.href = link;
+    }
+</script>
