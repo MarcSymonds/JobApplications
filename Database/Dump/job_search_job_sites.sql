@@ -16,33 +16,20 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `job_applications`
+-- Table structure for table `job_sites`
 --
 
-DROP TABLE IF EXISTS `job_applications`;
+DROP TABLE IF EXISTS `job_sites`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `job_applications` (
+CREATE TABLE `job_sites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `job_site_id` int(11) DEFAULT NULL,
-  `job_site_reference` varchar(30) DEFAULT NULL,
-  `employment_agency_id` int(11) DEFAULT NULL,
-  `employment_agency_contact_id` int(11) DEFAULT NULL,
-  `employment_agency_reference` varchar(30) DEFAULT NULL,
-  `company_name` varchar(45) DEFAULT NULL,
-  `company_location` varchar(200) DEFAULT NULL,
-  `job_title` varchar(45) DEFAULT NULL,
-  `application_date` datetime DEFAULT NULL,
-  `last_updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `name` varchar(45) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `last_updated` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `FK_app_job_site_idx` (`job_site_id`),
-  KEY `FK_app_emp_agency_idx` (`employment_agency_id`),
-  KEY `FK_app_emp_agency_contact_idx` (`employment_agency_contact_id`),
-  CONSTRAINT `FK_app_emp_agency` FOREIGN KEY (`employment_agency_id`) REFERENCES `employment_agencies` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_app_emp_agency_contact` FOREIGN KEY (`employment_agency_contact_id`) REFERENCES `employment_agency_contacts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_app_job_site` FOREIGN KEY (`job_site_id`) REFERENCES `job_sites` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +41,4 @@ CREATE TABLE `job_applications` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-23 18:11:59
+-- Dump completed on 2017-05-27  8:58:38

@@ -16,23 +16,25 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `employment_agency_contacts`
+-- Table structure for table `job_application_activity`
 --
 
-DROP TABLE IF EXISTS `employment_agency_contacts`;
+DROP TABLE IF EXISTS `job_application_activity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `employment_agency_contacts` (
+CREATE TABLE `job_application_activity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `employment_agency_id` int(11) DEFAULT NULL,
-  `contact_name` varchar(45) DEFAULT NULL,
-  `contact_email` varchar(100) DEFAULT NULL,
-  `contact_telephone` varchar(20) DEFAULT NULL,
-  `last_updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `job_application_id` int(11) NOT NULL,
+  `activity_type_id` int(11) DEFAULT NULL,
+  `description` text,
+  `activity_date` datetime DEFAULT NULL,
+  `last_updated` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `FK_emp_agency_contact_idx` (`employment_agency_id`),
-  CONSTRAINT `FK_emp_agency_contact` FOREIGN KEY (`employment_agency_id`) REFERENCES `employment_agencies` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+  KEY `ix_job_app_id_last_updated` (`job_application_id`,`last_updated`),
+  KEY `FK_activity_type_idx` (`activity_type_id`),
+  CONSTRAINT `FK_activity_type` FOREIGN KEY (`activity_type_id`) REFERENCES `job_application_activity_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_job_application` FOREIGN KEY (`job_application_id`) REFERENCES `job_applications` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -44,4 +46,4 @@ CREATE TABLE `employment_agency_contacts` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-23 18:12:00
+-- Dump completed on 2017-05-27  8:58:38
