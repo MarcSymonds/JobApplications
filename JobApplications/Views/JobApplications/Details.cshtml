@@ -1,98 +1,158 @@
-﻿@model JobApplications.DTOs.job_applicationDTO
+﻿@using JobApplications.ViewModels
+@model job_applicationVMDetail
 
 @{
-    ViewBag.Title = "Details";
+   ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-
+<h2>Job Application Details</h2>
+<p>@Html.ActionLink("Back to List", "Index")</p>
+<hr />
 <div>
-    <h4>job_applications</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.job_site_id)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.job_site_id)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.job_site_reference)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.job_site_reference)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.employment_agency_id)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.employment_agency_id)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.employment_agency_contact_id)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.employment_agency_contact_id)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.employment_agency_reference)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.employment_agency_reference)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.company_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.company_name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.company_location)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.company_location)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.job_title)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.job_title)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.application_date)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.application_date)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.last_updated)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.last_updated)
-        </dd>
-
-    </dl>
+    <table class="table">
+        <tbody>
+            <tr>
+                <td style="width: 50%;">
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(model => model.job_site)</dt>
+                        <dd>@Html.DisplayFor(model => model.job_site.name)</dd>
+                        <dt>@Html.DisplayNameFor(model => model.job_site_reference)</dt>
+                        <dd>@Html.DisplayFor(model => model.job_site_reference)</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(model => model.employment_agency)</dt>
+                        <dd>@Html.DisplayFor(model => model.employment_agency.name)</dd>
+                        <dt>@Html.DisplayNameFor(model => model.employment_agency_reference)</dt>
+                        <dd>@Html.DisplayFor(model => model.employment_agency_reference)</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(model => model.employment_agency_contact)</dt>
+                        <dd>@Html.DisplayFor(model => model.employment_agency_contact.contact_name)</dd>
+                        <dd>@Html.DisplayFor(model => model.employment_agency_contact.contact_email)</dd>
+                        <dd>@Html.DisplayFor(model => model.employment_agency_contact.contact_telephone)</dd>
+                    </dl>
+                </td>
+                <td>
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(model => model.company_name)</dt>
+                        <dd>@Html.DisplayFor(model => model.company_name)</dd>
+                        <dt>@Html.DisplayNameFor(model => model.company_location)</dt>
+                        <dd>@Html.DisplayFor(model => model.company_location)</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(model => model.job_title)</dt>
+                        <dd>@Html.DisplayFor(model => model.job_title)</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(model => model.application_date)</dt>
+                        <dd>@Html.DisplayFor(model => model.application_date)</dd>
+                        <dt>@Html.DisplayNameFor(model => model.last_updated)</dt>
+                        <dd>@Html.DisplayFor(model => model.last_updated)</dd>
+                    </dl>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+<hr />
+<h2>Job Application Activity</h2>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
-    @Html.ActionLink("Back to List", "Index")
+       <a href="#" onclick="createActivity();">Create New</a>
 </p>
+<table class="table dataTable table-bordered table-hover">
+    <thead>
+        <tr>
+            <th style="width: 10%;">Type</th>
+            <th>Activity</th>
+            <th style="width: 12%;">Activity Date</th>
+            <th style="width: 12%;">Last Updated</th>
+            <th style="width: 4%;"> </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+           bool odd = false;
+           string rowClass;
+
+           foreach (var activity in Model.job_application_activity) {
+              odd = !odd;
+              rowClass = odd ? "odd" : "";
+            <tr class="pointer @rowClass" onclick="editActivity(@activity.id);">
+                <td>@Html.DisplayFor(model => activity.job_application_activity_type.description)</td>
+                <td>@Html.DisplayFor(model => activity.description)</td>
+                <td>@Html.DisplayFor(model => activity.activity_date)</td>
+                <td>@Html.DisplayFor(model => activity.last_updated)</td>
+                <td style="text-align: center;" action="noclick">
+                    <a href="#" class="btn-xs" action="deleteButton" item-id="@activity.id" title="Delete activity" >
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </td>
+            </tr>
+           }
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/bootbox")
+}
+
+<script>
+    function editActivity(id) {
+        let url = "@(Url.Action("Edit", "JobApplicationActivity"))/" + id;
+        window.location.href = url;
+    }
+
+    function createActivity() {
+        let url = "@Url.Action("Create", "JobApplicationActivity")?applicationId=@(Model.id)";
+        window.location.href = url;
+    }
+
+    function deleteActivity(trElement, id) {
+        $(trElement).addClass("highlight");
+        
+        bootbox.confirm({
+            size: "small",
+            animate: false,
+            message:"Delete the selected activity record?",
+            callback: function(result) {
+                if (result) {
+                    $.ajax({
+                        url: "@Url.Content("~/api/jobapplicationactivity/")" + id,
+                        method: "DELETE",
+                        success: function () {
+                            $(trElement).remove();
+                        },
+                        error: function (jqXHR, options, error) {
+                            alert(jqXHR.responseJSON.message);
+                        },
+                        complete: function () {
+                            $(trElement).removeClass("highlight");
+                        }
+                    });
+                }
+                else {
+                    $(trElement).removeClass("highlight");
+                }
+
+            },
+            buttons: {
+                confirm: { label: "Delete", className: "btn-danger" },
+                cancel: { lable: "Cancel", className: "btn-success" }
+            }
+        });
+    }
+
+    // Add a click handler to all of the delete buttons.
+    $("[action='deleteButton']").bind("click", function(event) {
+        event.stopPropagation();
+        
+        let id = this.attributes["item-id"].value;
+        deleteActivity($(this).parents("tr")[0], id);
+    });
+
+    // Prevent click handling on specific elements (namely the last column in the Job Application Activity table).
+    $("[action='noclick']").bind("click", function(event) {
+        event.stopPropagation();
+    });
+</script>

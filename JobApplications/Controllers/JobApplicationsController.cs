@@ -56,7 +56,12 @@ namespace JobApplications.Controllers {
       }
       */
 
-      // GET: job_applications
+      /// <summary>
+      /// GET: JobApplications[/Index]
+      /// 
+      /// Display list of Job Applications.
+      /// </summary>
+      /// <returns></returns>
       public ActionResult Index() {
          var data = db
             .job_applications
@@ -64,14 +69,49 @@ namespace JobApplications.Controllers {
             .Include(x => x.employment_agency)
             .Include(x => x.employment_agency_contact)
             .Include(x => x.latest_job_activity)
-            .OrderByDescending(o => o.last_updated).ThenByDescending(o => o.application_date)
+            .OrderByDescending(o => o.latest_job_activity.FirstOrDefault().activity_date ?? o.application_date ?? o.last_updated) // o.last_updated).ThenByDescending(o => o.application_date)
             .ToList()
             .Select(Mapper.Map<job_application, job_applicationVMList>);
 
          return View(data);
       }
 
-      // GET: job_applications/Edit/5
+      // 
+      /// <summary>
+      /// GET: JobApplications/Create
+      /// 
+      /// Create a new Job Application record.
+      /// </summary>
+      /// <returns></returns>
+      public ActionResult Create() {
+         job_applicationVMEdit edit = new job_applicationVMEdit() {
+            id = 0
+         };
+
+         edit.employment_agencies = db
+            .employment_agencies
+            .OrderBy(o => o.name)
+            .ToList()
+            .Select(Mapper.Map<employment_agency, employment_agencyDTO>);
+
+         edit.employment_agency_contacts = new HashSet<employment_agency_contactDTO>();
+
+         edit.job_sites = db
+            .job_sites
+            .OrderBy(o => o.name)
+            .ToList()
+            .Select(Mapper.Map<job_site, job_siteDTO>);
+
+         return View("Edit", edit);
+      }
+
+      /// <summary>
+      /// GET: JobApplications/Edit/5 
+      /// 
+      /// Edit a Job Application Record.
+      /// </summary>
+      /// <param name="id">identifier of job_application record to edit.</param>
+      /// <returns></returns>
       public ActionResult Edit(int? id) {
          if (id == null) {
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -85,11 +125,14 @@ namespace JobApplications.Controllers {
 
          job_applicationVMEdit edit = Mapper.Map<job_applicationVMEdit>(job_application);
 
+         // List of employment agencies.
          edit.employment_agencies = db
             .employment_agencies
+            .OrderBy(o => o.name)
             .ToList()
             .Select(Mapper.Map<employment_agency, employment_agencyDTO>);
 
+         // List of contacts for the current employment agency.
          edit.employment_agency_contacts = db
             .employment_agency_contacts
             .Where(w => w.employment_agency_id == edit.employment_agency_id)
@@ -97,13 +140,24 @@ namespace JobApplications.Controllers {
             .ToList()
             .Select(Mapper.Map<employment_agency_contact, employment_agency_contactDTO>);
 
-         edit.job_sites = db.job_sites.ToList().Select(Mapper.Map<job_site, job_siteDTO>);
+         // List of job sites.
+         edit.job_sites = db
+            .job_sites
+            .OrderBy(o => o.name)
+            .ToList()
+            .Select(Mapper.Map<job_site, job_siteDTO>);
 
          return View(edit);
       }
 
 
-      // GET: job_applications/Details/5
+      /// <summary>
+      /// GET: job_applications/Details/5 
+      /// 
+      /// Show the details for the specified Job Application, including the activity.
+      /// </summary>
+      /// <param name="id"></param>
+      /// <returns></returns>
       public ActionResult Details(int? id) {
          if (id == null) {
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -119,34 +173,28 @@ namespace JobApplications.Controllers {
             return HttpNotFound();
          }
 
-         return View(Mapper.Map(job_application, job_application.GetType(), typeof(job_applicationVMList)));
+         var data = Mapper.Map<job_applicationVMDetail>(job_application);
+
+         data.job_application_activity = db.job_application_activity
+            .Include(x => x.job_application_activity_type)
+            .Where(w => w.job_application_id == id)
+            .OrderByDescending(o => o.activity_date)
+            .Select(Mapper.Map<job_application_activity, job_application_activityDTO>)
+            .ToList();
+
+         return View(data);
       }
 
-      // GET: job_applications/Create
-      public ActionResult Create() {
-         job_applicationVMEdit edit = new job_applicationVMEdit() {
-            id = 0
-         };
-
-         edit.employment_agencies = db
-            .employment_agencies
-            .ToList()
-            .Select(Mapper.Map<employment_agency, employment_agencyDTO>);
-
-         edit.employment_agency_contacts = new HashSet<employment_agency_contactDTO>();
-
-         edit.job_sites = db
-            .job_sites
-            .ToList()
-            .Select(Mapper.Map<job_site, job_siteDTO>);
-
-
-         return View("Edit", edit);
-      }
-
-      // POST: job_applications/Create
+      // 
       // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+      /// <summary>
+      /// POST: job_applications/Save
+      /// 
+      /// 
+      /// </summary>
+      /// <param name="job_application"></param>
+      /// <returns>Redirects to the Index page</returns>
       [HttpPost]
       [ValidateAntiForgeryToken]
       public ActionResult Save(job_applicationDTOBase job_application) {
@@ -169,6 +217,21 @@ namespace JobApplications.Controllers {
                save = Mapper.Map<job_application>(job_application);
                save.last_updated = DateTime.Now;
                db.job_applications.Add(save);
+
+               db.SaveChanges();
+
+               // If we created an application with an application date, then create an activity as well.
+               if (job_application.application_date != null) {
+                  job_application_activity activity = new job_application_activity {
+                     activity_type_id = 1, // Naughty since this ID is not fixed.
+                     job_application_id = save.id,
+                     description = "Applied for role",
+                     activity_date = job_application.application_date
+                  };
+
+                  db.job_application_activity.Add(activity);
+                  db.SaveChanges();
+               }
             }
             else {
                save = db.job_applications.Find(job_application.id);
@@ -179,19 +242,11 @@ namespace JobApplications.Controllers {
 
                Mapper.Map(job_application, save, job_application.GetType(), typeof(job_application));
 
-               /*save.job_site_id = job_application.job_site_id;
-               save.job_site_reference = job_application.job_site_reference;
-               save.employment_agency_id = job_application.employment_agency_id;
-               save.employment_agency_contact_id = job_application.employment_agency_contact_id;
-               save.employment_agency_reference = job_application.employment_agency_reference;
-               save.company_name = job_application.company_name;
-               save.company_location = job_application.company_location;
-               save.job_title = job_application.job_title;*/
-
                save.last_updated = DateTime.Now;
+
+               db.SaveChanges();
             }
 
-            db.SaveChanges();
          }
 
          return RedirectToAction("Index");

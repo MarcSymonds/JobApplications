@@ -12,7 +12,7 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="45" />
           <Property Name="url" Type="varchar" MaxLength="255" />
-          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="None" />
+          <Property Name="last_updated" Type="datetime" Precision="0" />
         </EntityType>
         <EntityType Name="employment_agency_contacts">
           <Key>
@@ -23,7 +23,7 @@
           <Property Name="contact_name" Type="varchar" MaxLength="45" />
           <Property Name="contact_email" Type="varchar" MaxLength="100" />
           <Property Name="contact_telephone" Type="varchar" MaxLength="20" />
-          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="None" Nullable="false" />
+          <Property Name="last_updated" Type="datetime" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="job_application_activity">
           <Key>
@@ -34,7 +34,7 @@
           <Property Name="activity_type_id" Type="int" />
           <Property Name="description" Type="text" />
           <Property Name="activity_date" Type="datetime" Precision="0" />
-          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" />
+          <Property Name="last_updated" Type="datetime" Precision="0" />
         </EntityType>
         <EntityType Name="job_application_activity_type">
           <Key>
@@ -49,15 +49,15 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="job_site_id" Type="int" />
-          <Property Name="job_site_reference" Type="varchar" MaxLength="30" />
+          <Property Name="job_site_reference" Type="varchar" MaxLength="50" />
           <Property Name="employment_agency_id" Type="int" />
           <Property Name="employment_agency_contact_id" Type="int" />
-          <Property Name="employment_agency_reference" Type="varchar" MaxLength="30" />
+          <Property Name="employment_agency_reference" Type="varchar" MaxLength="50" />
           <Property Name="company_name" Type="varchar" MaxLength="45" />
           <Property Name="company_location" Type="varchar" MaxLength="200" />
           <Property Name="job_title" Type="varchar" MaxLength="45" />
           <Property Name="application_date" Type="datetime" Precision="0" />
-          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="None" Nullable="false" />
+          <Property Name="last_updated" Type="datetime" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="job_sites">
           <Key>
@@ -66,7 +66,7 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="45" />
           <Property Name="url" Type="varchar" MaxLength="255" />
-          <Property Name="last_updated" Type="datetime" Precision="0" StoreGeneratedPattern="None" />
+          <Property Name="last_updated" Type="datetime" Precision="0" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.job_search.latest_job_activity' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -156,6 +156,7 @@ warning 6002: The table/view 'def.job_search.latest_job_activity' does not have 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        
         <EntityContainer Name="job_searchModelStoreContainer">
           <EntitySet Name="employment_agencies" EntityType="Self.employment_agencies" Schema="job_search" store:Type="Tables" />
           <EntitySet Name="employment_agency_contacts" EntityType="Self.employment_agency_contacts" Schema="job_search" store:Type="Tables" />
@@ -237,10 +238,10 @@ FROM `latest_job_activity` AS `latest_job_activity`</DefiningQuery>
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="job_site_id" Type="Int32" />
-          <Property Name="job_site_reference" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="job_site_reference" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="employment_agency_id" Type="Int32" />
           <Property Name="employment_agency_contact_id" Type="Int32" />
-          <Property Name="employment_agency_reference" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="employment_agency_reference" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="company_name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="company_location" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="job_title" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
@@ -363,7 +364,7 @@ FROM `latest_job_activity` AS `latest_job_activity`</DefiningQuery>
           <Property Name="job_application_id" Type="Int32" Nullable="false" />
           <Property Name="activity_type_id" Type="Int32" />
           <Property Name="description" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
-          <Property Name="last_updated" Type="DateTime" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="last_updated" Type="DateTime" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="job_application_activity_type" Relationship="job_searchModel.FK_activity_type" FromRole="job_application_activity" ToRole="job_application_activity_type" />
           <NavigationProperty Name="job_applications" Relationship="job_searchModel.FK_job_application" FromRole="job_application_activity" ToRole="job_application" />
           <NavigationProperty Name="latest_job_activity" Relationship="job_searchModel.latest_job_activityjob_application_activity" FromRole="job_application_activity" ToRole="latest_job_activity" />

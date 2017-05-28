@@ -5,6 +5,8 @@
    ViewBag.Title = "Edit";
 }
 
+@Styles.Render("~/Content/toastr")
+
 @if (Model.id == 0) {
 <h2>Create Job Application</h2>
 }
@@ -13,7 +15,7 @@ else {
 }
 <hr />
 
-@using (Html.BeginForm("Save", "JobApplications")) {
+@using (Html.BeginForm("Save", "JobApplications", FormMethod.Post, new { @name = "editForm", @id = "editForm" })) {
 @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
@@ -23,9 +25,12 @@ else {
 
     <div class="form-group">
         @Html.LabelFor(model => model.job_site_id, "job_site_id", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.job_site_id, new SelectList(Model.job_sites, "Id", "Name"), "", htmlAttributes: new { @class = "form-control" })
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.job_site_id, new SelectList(Model.job_sites, "Id", "Name"), "", htmlAttributes: new { @class = "form-control-inline" })
+            <button type="button" class="btn btn-info" id="btnAddJobSite" onclick="addJobSiteModal();" title="Add a new Job Site">Add</button>
             @Html.ValidationMessageFor(model => model.job_site_id, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-2">
         </div>
     </div>
 
@@ -40,7 +45,8 @@ else {
     <div class="form-group">
         @Html.LabelFor(model => model.employment_agency_id, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.employment_agency_id, new SelectList(Model.employment_agencies, "Id", "Name"), "", htmlAttributes: new { @class = "form-control", @onchange = "employmentAgencyChanged(this);" })
+            @Html.DropDownListFor(model => model.employment_agency_id, new SelectList(Model.employment_agencies, "Id", "Name"), "", htmlAttributes: new { @class = "form-control-inline", @onchange = "employmentAgencyChanged(this);" })
+            <button type="button" class="btn btn-info" id="btnAddEmploymentAgency" onclick="addEmploymentAgencyModal();" title="Add a new Employment Agency">Add</button>
             @Html.ValidationMessageFor(model => model.employment_agency_id, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -48,7 +54,8 @@ else {
     <div class="form-group">
         @Html.LabelFor(model => model.employment_agency_contact_id, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.employment_agency_contact_id, new SelectList(Model.employment_agency_contacts, "id", "contact_name"), "", htmlAttributes: new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.employment_agency_contact_id, new SelectList(Model.employment_agency_contacts, "id", "contact_name"), "", htmlAttributes: new { @class = "form-control-inline" })
+            <button type="button" class="btn btn-info" id="btnAddEmploymentAgencyContact" onclick="addEmploymentAgencyContactModal();" title="Add a new Employment Agency Contact">Add</button>
             @Html.ValidationMessageFor(model => model.employment_agency_contact_id, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -88,7 +95,7 @@ else {
     <div class="form-group">
         @Html.LabelFor(model => model.application_date, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.application_date, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.application_date)
             @Html.ValidationMessageFor(model => model.application_date, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -100,9 +107,9 @@ else {
         </div>
     </div>
 </div>
-}
+               }
 
-<button type="button" class="btn btn-info" id="btnAddJobSite" onclick="addJobSiteModal();">Add</button>
+<!-- Modal form for adding a new Job Site record. -->
 
 <div class="modal fade" id="addJobSiteContainer" role="dialog">
     <div class="modal-dialog">
@@ -111,18 +118,18 @@ else {
                 <h3>Add Job Site</h3>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("Add", "JobSites", FormMethod.Post, new { @name = "addJobSiteForm", @id = "addJobSiteForm" })) {
+                @using (Html.BeginForm("Create", "JobSites", FormMethod.Post, new { @name = "addJobSiteForm", @id = "addJobSiteForm" })) {
                 <div class="form-horizontal">
                     <div class="form-group">
-                        @Html.LabelFor(model => model.job_site.name, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.job_site.name, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
                             @Html.EditorFor(model => model.job_site.name, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.job_site.name, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.job_site.url, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.job_site.url, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
                             @Html.EditorFor(model => model.job_site.url, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.job_site.url, "", new { @class = "text-danger" })
                         </div>
@@ -131,7 +138,86 @@ else {
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success">Add</button>
+                <button type="button" class="btn btn-success" onclick="return addJobSite();">Add</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" style="padding-left: 10px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal form for adding a new Employment Agency record. -->
+
+<div class="modal fade" id="addEmploymentAgencyContainer" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Employment Agency</h3>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "EmploymentAgencies", FormMethod.Post, new { @name = "addEmploymentAgencyForm", @id = "addEmploymentAgencyForm" })) {
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.employment_agency.name, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.employment_agency.name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.employment_agency.name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.employment_agency.url, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.employment_agency.url, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.employment_agency.url, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="return addEmploymentAgency();">Add</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" style="padding-left: 10px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal form for adding a new Employment Agency Contact record. -->
+
+<div class="modal fade" id="addEmploymentAgencyContactContainer" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Employment Agency Contact</h3>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "EmploymentAgencyContacts", FormMethod.Post, new { @name = "addEmploymentAgencyContactForm", @id = "addEmploymentAgencyContactForm" })) {
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.employment_agency_contact.contact_name, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.employment_agency_contact.contact_name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.employment_agency_contact.contact_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.employment_agency_contact.contact_email, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.employment_agency_contact.contact_email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.employment_agency_contact.contact_email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.employment_agency_contact.contact_telephone, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.employment_agency_contact.contact_telephone, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.employment_agency_contact.contact_telephone, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="return addEmploymentAgencyContact();">Add</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal" style="padding-left: 10px;">Cancel</button>
             </div>
         </div>
@@ -140,13 +226,18 @@ else {
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
+    @Scripts.Render("~/bundles/jqueryval.ext")
+    @Scripts.Render("~/bundles/toastr")
 
 <script>
     function goBack() {
         window.location.href = '@Url.Action("Index")';
     }
 
+    // If the employment agency is changed, then we need to go and get a list of the contacts
+    // at that agency, and update the contact list.
+    // When this form is first loaded, the conacts for the agency are initially provided by
+    // the controller.
     function employmentAgencyChanged(agencyList) {
         // Get the selected agency.
         let item = agencyList.options[agencyList.selectedIndex];
@@ -162,8 +253,8 @@ else {
         contactList.options[0] = new Option("", "", false, false);
 
         if (item.value != "") {
-            // Go an retrieve a list of contacts for the selected agency.
-            $.getJSON("/api/EmploymentAgencyContacts/" + item.value, null, function (data, textStatus, jqXHR) {
+            // Go and retrieve a list of contacts for the selected agency.
+            $.getJSON("@Url.Content("~/api/EmploymentAgencyContacts/")" + item.value, null, function (data, textStatus, jqXHR) {
                 // Add the retrieved contacts to the contact list.
                 let idx = 0;
                 while (idx < data.length) {
@@ -180,19 +271,169 @@ else {
     }
 
     function addJobSiteModal() {
+        // Clear the input fields.
         let form = document.forms["addJobSiteForm"];
         form["job_site.name"].value = "";
         form["job_site.url"].value = "";
 
+        // Open the modal form.
         $("#addJobSiteContainer").modal();
     }
 
+    // Add button clicked on form.
+    function addJobSite() {
+        let form = document.forms["addJobSiteForm"];
+
+        // Post the data to the API controller.
+        $.post(
+            "@Url.Content("~/api/JobSites/Create")",
+            {
+                name: form["job_site.name"].value,
+                url: form["job_site.url"].value
+            },
+            addJobSiteSuccess,
+            "json"
+            )
+            .error(function (jqXHR, options, error) {
+                alert(jqXHR.responseJSON.message);
+            });
+    }
+
+    // Adding the Job Site was a success...
+    function addJobSiteSuccess(data, textStatus, jqXHR) {
+        let form = document.forms["editForm"];
+        let list = form["job_site_id"];
+
+        // Add the new job site to the job site list, and select it.
+        let opt = new Option(data.name, data.id, true, true);
+        list.options[list.options.length] = opt;
+
+        // Close the modal form.
+        $("#addJobSiteContainer").modal("hide");
+
+        successToast("Job Site Added");
+    }
+
+    function addEmploymentAgencyModal() {
+        let form = document.forms["addEmploymentAgencyForm"];
+        form["employment_agency.name"].value = "";
+        form["employment_agency.url"].value = "";
+
+        $("#addEmploymentAgencyContainer").modal();
+    }
+
+    function addEmploymentAgency() {
+        let form = document.forms["addEmploymentAgencyForm"];
+
+        $.post(
+            "@Url.Content("~/api/EmploymentAgencies/Create")",
+            {
+                name: form["employment_agency.name"].value,
+                url: form["employment_agency.url"].value
+            },
+            addEmploymentAgencySuccess,
+            "json"
+            )
+            .error(function (jqXHR, options, error) {
+                alert(jqXHR.responseJSON.message);
+            });
+    }
+
+    function addEmploymentAgencySuccess(data, textStatus, jqXHR) {
+        let form = document.forms["editForm"];
+        let list = form["employment_agency_id"];
+
+        let opt = new Option(data.name, data.id, true, true);
+        list.options[list.options.length] = opt;
+
+        // Clear the agency contact list - since we won't have any for the new agency.
+        let contactList = form["@(Html.NameFor(m => Model.employment_agency_contact_id))"];
+        while (contactList.options.length > 0) {
+            contactList.options.remove(0);
+        }
+        contactList.options[0] = new Option("", "", false, false);
+
+        $("#addEmploymentAgencyContainer").modal("hide");
+
+        successToast("Employment Agency Added");
+    }
+
+    function addEmploymentAgencyContactModal() {
+        let agency = document.forms["editForm"]["employment_agency_id"];
+
+        if (agency.options.length == 0 || agency.selectedIndex < 0 || agency.options[agency.selectedIndex].value == "") {
+            alert("Select the Employment Agency to add the contact to.");
+            return false;
+        }
+
+        let form = document.forms["addEmploymentAgencyContactForm"];
+
+        form["employment_agency_contact.contact_name"].value = "";
+        form["employment_agency_contact.contact_email"].value = "";
+        form["@(Html.NameFor(m => m.employment_agency_contact.contact_telephone))"].value = "";
+
+        $("#addEmploymentAgencyContactContainer").modal();
+    }
+
+    function addEmploymentAgencyContact() {
+        let form = document.forms["addEmploymentAgencyContactForm"];
+        let agency = document.forms["editForm"]["employment_agency_id"];
+
+        $.post(
+            "@Url.Content("~/api/EmploymentAgencyContacts/Create")",
+            {
+                employment_agency_id: agency.options[agency.selectedIndex].value,
+                contact_name: form["employment_agency_contact.contact_name"].value,
+                contact_email: form["employment_agency_contact.contact_email"].value,
+                contact_telephone: form["employment_agency_contact.contact_telephone"].value
+            },
+            addEmploymentAgencyContactSuccess,
+            "json"
+            )
+            .error(function (jqXHR, options, error) {
+                alert(jqXHR.responseJSON.message);
+            });
+    }
+
+    function addEmploymentAgencyContactSuccess(data, textStatus, jqXHR) {
+        let form = document.forms["editForm"];
+        let list = form["employment_agency_contact_id"];
+
+        let opt = new Option(data.contact_name, data.id, true, true);
+        list.options[list.options.length] = opt;
+
+        $("#addEmploymentAgencyContactContainer").modal("hide");
+
+        successToast("Employment Agency Contact Added");
+    }
+
+    function successToast(message) {
+        toastr.success(message, "", {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "500",
+            "timeOut": "3500",
+            "extendedTimeOut": "500",
+            "showEasing": "swing",
+            "hideEasing": "swing",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        });
+    }
+
+    // Dump the value of an object.
     function xx(o) {
         let s = '';
         let first = true;
 
         if (o == null) {
-            s = "<null>";
+            s = "[null]";
         }
         else if (typeof o == "object") {
             s = "{";
@@ -228,3 +469,4 @@ else {
         });
     });
 </script>
+}

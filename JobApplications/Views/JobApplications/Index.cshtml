@@ -37,8 +37,8 @@
                odd = !odd;
                hasLatest = item.latest_job_activity != null && item.latest_job_activity.Count > 0;
 
-               rowClass = odd ? "odd" : "";
-            <tr class="pointer @rowClass" onclick="editItem('@Url.Action("Edit", new { id = item.id })');">
+               rowClass = odd ? "odd" : "";//'@Url.Action("Details", new { id = item.id })'
+            <tr class="pointer @rowClass" onclick="openItem(@item.id);">
                 <td class="dt-body-nowrap">
                     @if (!String.IsNullOrWhiteSpace(item.job_site?.name)) {
                     @Html.DisplayFor(modelItem => item.job_site.name)
@@ -87,9 +87,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.last_updated)
                 </td>
-                <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                <td style="text-align: center; width: 60px; text-wrap: none; white-space: nowrap;" action="noclick">
+                    <a href="#" class="btn-xs" action="editButton" item-id="@item.id" title="Edit application"><span style="font-size: larger;" class="glyphicon glyphicon-edit"></span></a>
+                    <a href="#" class="btn-xs" action="deleteButton" item-id="@item.id" title="Delete application"><span style="font-size: larger;" class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
             {
@@ -112,7 +112,39 @@
 </table>
 
 <script>
-    function editItem(link) {
-        window.location.href = link;
+    function openItem(id) {
+        let url = "@(Url.Action("Details"))/" + id;
+        window.location.href = url;
     }
+
+    function editApplication(id) {
+        let url = "@Url.Action("Edit")/" + id;
+        window.location.href = url;
+    }
+
+    function deleteApplication(trElement, id) {
+        alert("Not implemented");
+    }
+
+    // Add a click handler to all of the delete buttons.
+    $("[action='editButton']").bind("click", function (event) {
+        event.stopPropagation();
+
+        let id = this.attributes["item-id"].value;
+        editApplication(id);
+    });
+
+    // Add a click handler to all of the delete buttons.
+    $("[action='deleteButton']").bind("click", function (event) {
+        event.stopPropagation();
+
+        let id = this.attributes["item-id"].value;
+        deleteApplication($(this).parents("tr")[0], id);
+    });
+
+    // Prevent click handling on specific elements (namely the last column in the Job Application table).
+    $("[action='noclick']").bind("click", function (event) {
+        event.stopPropagation();
+    });
+
 </script>

@@ -1036,12 +1036,12 @@ $.extend($.validator, {
 		},
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/date
-		date: function( value, element ) {
+		date: function (value, element) {
 			return this.optional(element) || !/Invalid|NaN/.test(new Date(value).toString());
 		},
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/dateISO
-		dateISO: function( value, element ) {
+		dateISO: function (value, element) {
 			return this.optional(element) || /^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/.test(value);
 		},
 

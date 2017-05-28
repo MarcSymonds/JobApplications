@@ -8,6 +8,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 
 using AutoMapper;
+using JobApplications.Binders;
 
 namespace JobApplications {
    public class MvcApplication : System.Web.HttpApplication {
@@ -19,6 +20,9 @@ namespace JobApplications {
          BundleConfig.RegisterBundles(BundleTable.Bundles);
 
          Mapper.Initialize(c => c.AddProfile<MappingProfile>());
+
+         // Add binder for DateTime? in our models, so we can parse the date/time sent from forms.
+         ModelBinders.Binders.Add(typeof(DateTime?), new NullableDateTimeModelBinder());
       }
    }
 }

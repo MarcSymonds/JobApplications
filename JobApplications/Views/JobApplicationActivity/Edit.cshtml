@@ -1,0 +1,66 @@
+﻿@model JobApplications.ViewModels.job_application_activityVMEdit
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@if (Model.id == 0) {
+<h2>Create Job Application Activity</h2>
+}
+else {
+<h2>Edit Job Application Activity</h2>
+}
+<hr />
+
+@using (Html.BeginForm("Save", "JobApplicationActivity", FormMethod.Post, new { name = "editForm", id = "editForm" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.id)
+        @Html.HiddenFor(model => model.job_application_id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.activity_type_id, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.activity_type_id, new SelectList(Model.job_application_activity_types, "id", "description"), "", htmlAttributes: new { @class = "form-control-inline" })
+                @Html.ValidationMessageFor(model => model.activity_type_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.activity_date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.activity_date, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.activity_date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" />
+                <input type="button" value="Cancel" class="btn btn-danger" onclick="goBack();" style="padding-left: 10px;" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryval.ext")
+}
+
+<script>
+    function goBack() {
+        window.location.href = "@Url.Action("Details", "JobApplications")/@Model.job_application_id";
+    }
+</script>

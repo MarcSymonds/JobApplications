@@ -11,6 +11,9 @@ namespace JobApplications {
          bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                      "~/Scripts/jquery.validate*"));
 
+         bundles.Add(new ScriptBundle("~/bundles/jqueryval.ext").Include(
+                     "~/Scripts/jquery-validate-ext.js"));
+
          // Use the development version of Modernizr to develop with and learn from. Then, when you're
          // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
          bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -27,6 +30,15 @@ namespace JobApplications {
          bundles.Add(new StyleBundle("~/Content/datatables").Include(
             "~/Content/DataTables/css/datatables.bootstrap.css",
             "~/Content/DataTables/css/buttons.bootstrap.css"));
+
+         bundles.Add(new ScriptBundle("~/bundles/bootbox").Include(
+            "~/Scripts/bootbox.js"));
+
+         bundles.Add(new ScriptBundle("~/bundles/toastr").Include(
+            "~/Scripts/toastr.js"));
+
+         bundles.Add(new StyleBundle("~/Content/toastr").Include(
+            "~/Content/toastr.css"));
       }
    }
 }

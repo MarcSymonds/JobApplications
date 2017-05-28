@@ -8,7 +8,6 @@ using JobApplications.DTOs;
 
 namespace JobApplications.ViewModels {
    public class job_applicationVMEdit : job_applicationDTOBase {
-
       [Display(Name = "Job Site")]
       public IEnumerable<job_siteDTO> job_sites { get; set; }
 
@@ -23,6 +22,9 @@ namespace JobApplications.ViewModels {
       [Display(Name = "Agency Contact")]
       public IEnumerable<employment_agency_contactDTO> employment_agency_contacts { get; set; }
 
+      // These are just needed so that the View can reference these objects.
       public job_siteDTO job_site { get; set; }
+      public employment_agencyDTO employment_agency { get; set; }
+      public employment_agency_contactDTO employment_agency_contact { get; set; }
    }
 }

@@ -9,11 +9,11 @@ namespace JobApplications.DTOs {
    public class job_siteDTO {
       public int id { get; set; }
 
-      [Display(Name = "Job Site")]
+      [Display(Name = "Job Site Name")]
       [Required]
       public string name { get; set; }
 
-      [Display(Name = "Web Site")]
+      [Display(Name = "Web Site URL")]
       public string url { get; set; }
 
       public Nullable<System.DateTime> last_updated { get; set; }

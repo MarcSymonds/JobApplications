@@ -30,5 +30,7 @@ namespace JobApplications.Models {
       public static ApplicationDbContext Create() {
          return new ApplicationDbContext();
       }
+
+      public System.Data.Entity.DbSet<JobApplications.ViewModels.job_application_activityVMEdit> job_application_activityVMEdit { get; set; }
    }
 }

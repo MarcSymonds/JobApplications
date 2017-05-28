@@ -212,15 +212,24 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Binders\DateTimeModelBinder.cs" />
+    <Compile Include="Binders\DateTimeModelBinderBase.cs" />
+    <Compile Include="Binders\NullableDateTimeModelBinder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\EmploymentAgenciesController.cs" />
     <Compile Include="Controllers\Api\EmploymentAgencyContactsController.cs" />
+    <Compile Include="Controllers\Api\JobApplicationActivityController.cs" />
     <Compile Include="Controllers\Api\JobApplicationsController.cs" />
+    <Compile Include="Controllers\Api\JobSitesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\JobApplicationActivityController.cs" />
     <Compile Include="Controllers\JobSitesController.cs" />
     <Compile Include="Controllers\JobApplicationsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Custom\ValidationAttributes\MyDateTimeAttribute.cs" />
     <Compile Include="DTOs\employment_agencyDTO.cs" />
     <Compile Include="DTOs\employment_agency_contactDTO.cs" />
+    <Compile Include="ViewModels\job_applicationVMDetail.cs" />
     <Compile Include="ViewModels\job_applicationVMList.cs" />
     <Compile Include="DTOs\job_applicationDTOBase.cs" />
     <Compile Include="DTOs\job_application_activityDTO.cs" />
@@ -273,6 +282,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\job_application_activityVMEdit.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-lumen.css" />
@@ -435,6 +445,8 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
     <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -465,6 +477,8 @@
     <Content Include="Models\job_search.edmx.diagram">
       <DependentUpon>job_search.edmx</DependentUpon>
     </Content>
+    <Content Include="Content\toastr.scss" />
+    <Content Include="Content\toastr.less" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -530,6 +544,7 @@
     <Content Include="Scripts\DataTables\dataTables.semanticui.min.js" />
     <Content Include="Scripts\DataTables\dataTables.uikit.js" />
     <Content Include="Scripts\DataTables\dataTables.uikit.min.js" />
+    <Content Include="Scripts\jquery-validate-ext.js" />
     <Content Include="Scripts\DataTables\jquery.dataTables.js" />
     <Content Include="Scripts\DataTables\jquery.dataTables.min.js" />
     <Content Include="Scripts\DataTables\responsive.bootstrap.js" />
@@ -552,6 +567,8 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -587,12 +604,12 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\JobApplications\Create.cshtml" />
-    <Content Include="Views\JobApplications\Delete.cshtml" />
     <Content Include="Views\JobApplications\Details.cshtml" />
     <Content Include="Views\JobApplications\Edit.cshtml" />
     <Content Include="Views\JobApplications\Index.cshtml" />
-    <Content Include="Views\JobApplications\Test.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\JobApplicationActivity\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

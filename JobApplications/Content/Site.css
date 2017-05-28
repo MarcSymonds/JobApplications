@@ -28,9 +28,10 @@ tr.pointer td {
 }
 
 tr.job-app-latest-activity > td {
-    border-top-color: #999 !important;
+    border-top-color: #099 !important;
     border-top-style: dashed !important;
+    border-top-width: 1px;
 
     font-size: 90%;
-    color: #666;
+    color: #660;
 }
