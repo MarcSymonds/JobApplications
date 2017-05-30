@@ -229,6 +229,7 @@
     <Compile Include="Custom\ValidationAttributes\MyDateTimeAttribute.cs" />
     <Compile Include="DTOs\employment_agencyDTO.cs" />
     <Compile Include="DTOs\employment_agency_contactDTO.cs" />
+    <Compile Include="Models\job_applicationRecord.cs" />
     <Compile Include="ViewModels\job_applicationVMDetail.cs" />
     <Compile Include="ViewModels\job_applicationVMList.cs" />
     <Compile Include="DTOs\job_applicationDTOBase.cs" />
@@ -610,6 +611,7 @@
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\JobApplicationActivity\Edit.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MultiLineText.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -37,7 +37,7 @@ namespace JobApplications.Controllers.Api {
             .Include(x => x.latest_job_activity)
             .OrderByDescending(o => o.last_updated).ThenByDescending(o => o.application_date)
             .ToList()
-            .Select(Mapper.Map<job_application, job_applicationVMList>);
+            .Select(Mapper.Map<job_application, job_applicationRecord>);
 
          return Ok(data);
       }

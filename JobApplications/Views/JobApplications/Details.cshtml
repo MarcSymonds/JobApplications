@@ -79,7 +79,7 @@
               rowClass = odd ? "odd" : "";
             <tr class="pointer @rowClass" onclick="editActivity(@activity.id);">
                 <td>@Html.DisplayFor(model => activity.job_application_activity_type.description)</td>
-                <td>@Html.DisplayFor(model => activity.description)</td>
+                <td>@Html.DisplayFor(model => activity.description, "MultiLineText")</td>
                 <td>@Html.DisplayFor(model => activity.activity_date)</td>
                 <td>@Html.DisplayFor(model => activity.last_updated)</td>
                 <td style="text-align: center;" action="noclick">

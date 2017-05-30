@@ -62,18 +62,38 @@ namespace JobApplications.Controllers {
       /// Display list of Job Applications.
       /// </summary>
       /// <returns></returns>
-      public ActionResult Index() {
+      public ActionResult Index(string search = null) {
          var data = db
             .job_applications
             .Include(x => x.job_site)
             .Include(x => x.employment_agency)
             .Include(x => x.employment_agency_contact)
-            .Include(x => x.latest_job_activity)
-            .OrderByDescending(o => o.latest_job_activity.FirstOrDefault().activity_date ?? o.application_date ?? o.last_updated) // o.last_updated).ThenByDescending(o => o.application_date)
-            .ToList()
-            .Select(Mapper.Map<job_application, job_applicationVMList>);
+            .Include(x => x.latest_job_activity);
 
-         return View(data);
+         data = data
+            .OrderByDescending(o => o.latest_job_activity.FirstOrDefault().activity_date ?? o.application_date ?? o.last_updated); // o.last_updated).ThenByDescending(o => o.application_date)
+
+         if (!string.IsNullOrEmpty(search)) {
+            data = data.Where(w =>
+               w.company_name.Contains(search)
+               || w.company_location.Contains(search)
+               //|| w.job_site.name.Contains(search)
+               || w.job_site_reference.Contains(search)
+               || w.employment_agency_reference.Contains(search)
+               || w.job_title.Contains(search)
+            //|| w.employment_agency.name.Contains(search)
+            //|| w.employment_agency_contact.contact_name.Contains(search)
+            //|| w.employment_agency_contact.contact_email.Contains(search)
+            //|| w.employment_agency_contact.contact_telephone.Contains(search)
+            );
+         }
+
+         job_applicationVMList vdata = new job_applicationVMList();
+
+         vdata.job_applications = data.ToList().Select(Mapper.Map<job_application, job_applicationRecord>);
+         vdata.search = search;
+
+         return View(vdata);
       }
 
       // 

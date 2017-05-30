@@ -1,5 +1,5 @@
 ﻿@using JobApplications.ViewModels
-@model IEnumerable<job_applicationVMList>
+@model job_applicationVMList
 
 @{
    ViewBag.Title = "Job Applications";
@@ -7,11 +7,35 @@
 
 @Styles.Render("~/Content/datatables")
 
+@if (string.IsNullOrEmpty(Model.search)) {
 <h2>@ViewBag.Title</h2>
+}
+else {
+   <h2>@ViewBag.Title <em>(Filtered)</em></h2>
+}
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+
+<table style="width: 100%; padding: 0px 0px 10px 0px; margin: 0;">
+    <tbody>
+        <tr>
+            <td style="width: 50%;">@Html.ActionLink("Create New", "Create")
+            </td>
+            <td>
+                @using (Html.BeginForm("Index", "JobApplications", FormMethod.Post, new { @class = "navbar-form navbar-right", @role = "search" })) {
+                <div class="input-group">
+                    <input type="text" class="form-control" name="search" placeholder="Search ..." value="@Model.search"/>
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-success">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 <table class="table dataTable table-bordered table-hover">
     <thead>
         <tr>
@@ -32,7 +56,7 @@
            bool hasLatest;
            string rowClass;
 
-           foreach (var item in Model) {
+           foreach (var item in Model.job_applications) {
                line = false;
                odd = !odd;
                hasLatest = item.latest_job_activity != null && item.latest_job_activity.Count > 0;
@@ -98,7 +122,7 @@
                 <tr class="pointer job-app-latest-activity @rowClass">
 
                         <td><strong>Last Action</strong></td>
-                        <td colspan="4">@Html.DisplayFor(m => lastAct.description)</td>
+                        <td colspan="4">@Html.DisplayFor(m => lastAct.description, "MultiLineText")</td>
                         <td>@Html.DisplayFor(m => lastAct.activity_date)</td>
                         <td>@Html.DisplayFor(m => lastAct.last_updated)</td>
                         <td> </td>

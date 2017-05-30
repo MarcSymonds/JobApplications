@@ -12,6 +12,7 @@ namespace JobApplications.DTOs {
       public int? activity_type_id { get; set; }
 
       [Display(Name = "Description")]
+      [DataType(DataType.MultilineText)]
       public string description { get; set; }
 
       [Display(Name = "Activity Date", Prompt = "DD/MM/YYYY HH:mm:ss", Description = "Date of activity")]

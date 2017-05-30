@@ -7,8 +7,8 @@ using JobApplications.ViewModels;
 namespace JobApplications {
    public class MappingProfile : Profile {
       public MappingProfile() {
-         CreateMap<job_application, job_applicationVMList>();
-         CreateMap<job_applicationVMList, job_application>().ForMember(d => d.id, opt => opt.Ignore());
+         CreateMap<job_application, job_applicationRecord>();
+         CreateMap<job_applicationRecord, job_application>().ForMember(d => d.id, opt => opt.Ignore());
 
          CreateMap<job_application, job_applicationVMEdit>();
          CreateMap<job_applicationDTOBase, job_application>().ForMember(d => d.last_updated, opt => opt.Ignore());
